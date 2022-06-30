@@ -1,6 +1,7 @@
 # go-basic
 
-This package provides some basic utility functions.
+-Package basic provides some utility functions.
+-Package str provides some utilities to manipulate string.
 
 ## Usage
 
