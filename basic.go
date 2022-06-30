@@ -9,7 +9,7 @@ import (
 	"reflect"
 )
 
-// Identify whether the nay type is nil.
+// Identify whether the any type is nil.
 func IsNil(value any) bool {
 	if value == nil {
 		return true
