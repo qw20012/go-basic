@@ -4,6 +4,13 @@ import (
 	"testing"
 )
 
+func TestFromAny(t *testing.T) {
+	var anyMap = map[string]any{"1": 1}
+
+	if FromAny[int](anyMap["1"]) != 1 {
+		t.Fatalf("TestFromAny failed")
+	}
+}
 func TestNewIfEmpty(t *testing.T) {
 	// Test map
 	var emptyAnyMap map[string]any
