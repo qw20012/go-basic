@@ -10,15 +10,6 @@ go get github.com/qw20012/go-basic
 
 ## Usage
 
-### basic.IsNil
-
-Identify whether the any type is nil.
-```
-	var emptyArray [1]int
-	if basic.IsNil(emptyArray) {
-		t.Fatalf("GetOrCreate with emtpy slice failed")
-	}
-```
 ### basic.NewIfEmpty
 
 Make sure any type is created. Create by reflect if it is not there.
@@ -88,6 +79,24 @@ Format source string by calling Format functon. See also Format.
 	strFromMap := Formats("{a}{ b }c", diffTypeValue)
 	if strFromMap != "Dog1c" {
 		t.Fatal("TestFormats failed " + "Dog1c")
+	}
+```
+### ref.GetValue
+
+Get the exact value of given reflect.Value.
+```
+	var emptyArray [1]int
+	if basic.IsNil(emptyArray) {
+		t.Fatalf("GetOrCreate with emtpy slice failed")
+	}
+```
+### ref.IsNil
+
+Identify whether the any type is nil.
+```
+	var emptyArray [1]int
+	if basic.IsNil(emptyArray) {
+		t.Fatalf("GetOrCreate with emtpy slice failed")
 	}
 ```
 
