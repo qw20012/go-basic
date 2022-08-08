@@ -2,6 +2,8 @@
 
 - Package basic provides some utility functions.
 - Package str provides some utilities to manipulate string.
+- Package arr provides some utilities to manipulate array.
+- Package ref provides some utilities to manipulate reflect.
 
 ## Install
 ```
@@ -89,6 +91,15 @@ Format source string by calling Format functon. See also Format.
 	strFromMap := Formats("{a}{ b }c", diffTypeValue)
 	if strFromMap != "Dog1c" {
 		t.Fatal("TestFormats failed " + "Dog1c")
+	}
+```
+### arr.Contains
+
+Identify whether the given array contians the given element.
+```
+	var aArray = [3]int{1, 2, 3}
+	if !Contains(aArray[:], 2) {
+		t.Fatalf("TestContains failed")
 	}
 ```
 ### ref.GetValue
