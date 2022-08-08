@@ -10,6 +10,16 @@ go get github.com/qw20012/go-basic
 
 ## Usage
 
+### basic.FromAny
+
+Get the exact value of any.
+```
+	var anyMap = map[string]any{"1": 1}
+
+	if FromAny[int](anyMap["1"]) != 1 {
+		t.Fatalf("TestFromAny failed")
+	}
+```
 ### basic.NewIfEmpty
 
 Make sure any type is created. Create by reflect if it is not there.
@@ -85,9 +95,8 @@ Format source string by calling Format functon. See also Format.
 
 Get the exact value of given reflect.Value.
 ```
-	var emptyArray [1]int
-	if basic.IsNil(emptyArray) {
-		t.Fatalf("GetOrCreate with emtpy slice failed")
+	if GetValue[int](reflect.ValueOf(1)) != 1 {
+		t.Fatalf("TestGetValue with int type failed")
 	}
 ```
 ### ref.IsNil
@@ -97,6 +106,15 @@ Identify whether the any type is nil.
 	var emptyArray [1]int
 	if basic.IsNil(emptyArray) {
 		t.Fatalf("GetOrCreate with emtpy slice failed")
+	}
+```
+### ref.IsZero
+
+Identify whether the any type is zero.
+```
+	var emptyArray [1]int
+	if !IsZero(emptyArray) {
+		t.Fatalf("TestIsZero with emtpy slice failed")
 	}
 ```
 
