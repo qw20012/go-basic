@@ -2,6 +2,8 @@
 
 - Package basic provides some utility functions.
 - Package str provides some utilities to manipulate string.
+- Package arr provides some utilities to manipulate array.
+- Package ref provides some utilities to manipulate reflect.
 
 ## Install
 ```
@@ -10,6 +12,16 @@ go get github.com/qw20012/go-basic
 
 ## Usage
 
+### basic.FromAny
+
+Get the exact value of any.
+```
+	var anyMap = map[string]any{"1": 1}
+
+	if FromAny[int](anyMap["1"]) != 1 {
+		t.Fatalf("TestFromAny failed")
+	}
+```
 ### basic.NewIfEmpty
 
 Make sure any type is created. Create by reflect if it is not there.
@@ -81,13 +93,21 @@ Format source string by calling Format functon. See also Format.
 		t.Fatal("TestFormats failed " + "Dog1c")
 	}
 ```
+### arr.Contains
+
+Identify whether the given array contians the given element.
+```
+	var aArray = [3]int{1, 2, 3}
+	if !Contains(aArray[:], 2) {
+		t.Fatalf("TestContains failed")
+	}
+```
 ### ref.GetValue
 
 Get the exact value of given reflect.Value.
 ```
-	var emptyArray [1]int
-	if basic.IsNil(emptyArray) {
-		t.Fatalf("GetOrCreate with emtpy slice failed")
+	if GetValue[int](reflect.ValueOf(1)) != 1 {
+		t.Fatalf("TestGetValue with int type failed")
 	}
 ```
 ### ref.IsNil
@@ -97,6 +117,15 @@ Identify whether the any type is nil.
 	var emptyArray [1]int
 	if basic.IsNil(emptyArray) {
 		t.Fatalf("GetOrCreate with emtpy slice failed")
+	}
+```
+### ref.IsZero
+
+Identify whether the any type is zero.
+```
+	var emptyArray [1]int
+	if !IsZero(emptyArray) {
+		t.Fatalf("TestIsZero with emtpy slice failed")
 	}
 ```
 
