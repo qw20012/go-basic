@@ -3,6 +3,11 @@
 - Package basic provides some utility functions.
 - Package str provides some utilities to manipulate string.
 
+## Install
+```
+go get github.com/qw20012/go-basic
+```
+
 ## Usage
 
 ### basic.IsNil
