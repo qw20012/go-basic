@@ -5,6 +5,19 @@ import (
 	"strconv"
 )
 
+func Parse(value any) (reflect.Type, reflect.Kind, reflect.Value) {
+	v := reflect.ValueOf(value)
+	t := reflect.TypeOf(value)
+	k := t.Kind()
+
+	if k == reflect.Ptr {
+		v = v.Elem()
+		t = t.Elem()
+		k = t.Kind()
+	}
+	return t, k, v
+}
+
 // Get the exact value of given reflect.Value.
 func GetValue[T any](value reflect.Value) T {
 	return value.Interface().(T)
@@ -49,18 +62,33 @@ func IsZero(value any) bool {
 
 	t := v.Type()
 	switch t.Kind() {
-	case reflect.Map:
-		return v.Len() == 0
-	case reflect.Chan:
+	case reflect.Map, reflect.Chan:
 		return v.Len() == 0
 	case reflect.Slice:
 		s := reflect.MakeSlice(t, 0, 0)
 		return reflect.DeepEqual(v.Interface(), s.Interface())
 	case reflect.Ptr:
-		return reflect.Indirect(v).IsZero()
+		//return reflect.Indirect(v).IsZero()
+		if v.IsNil() {
+			return true
+		}
+		deref := v.Elem().Interface()
+		return IsZero(deref)
 	default:
 		return reflect.DeepEqual(v.Interface(), reflect.Zero(t).Interface())
 	}
+}
+
+// Make sure any type is created. Create by reflect if it is not there.
+func NewIfEmpty[T any](value T) T {
+	if !IsNil(value) {
+		return value
+	}
+
+	newValue := ReflectNew(value)
+	//creatd := newValue.Interface().(T)
+	creatd := GetValue[T](newValue)
+	return creatd
 }
 
 // Todo: Would complete this function in future.

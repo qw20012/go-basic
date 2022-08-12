@@ -2,112 +2,87 @@ package str
 
 import (
 	"testing"
+
+	"github.com/qw20012/go-basic/test"
 )
 
 func TestIsEmpty(t *testing.T) {
-	if !IsEmpty("") {
-		t.Fatal("IsEmpty failed")
-	}
-
-	if IsEmpty("abc") {
-		t.Fatal("IsEmpty failed " + "abc")
-	}
+	test.True(t, IsEmpty(""))
+	test.False(t, IsEmpty("abc"))
 }
 
 func TestIsNotEmpty(t *testing.T) {
-	if IsNotEmpty("") {
-		t.Fatal("IsNotEmpty failed")
-	}
-
-	if !IsNotEmpty("abc") {
-		t.Fatal("IsNotEmpty failed" + "abc")
-	}
+	test.False(t, IsNotEmpty(""))
+	test.True(t, IsNotEmpty("abc"))
 }
 
 func TestContact(t *testing.T) {
-	nilToTest := Contact()
-	if nilToTest != "" {
-		t.Fatal("TestContact failed")
-	}
-
-	empty := Contact("")
-	if empty != "" {
-		t.Fatal("TestContact failed")
-	}
-
-	one := Contact("abc")
-	if one != "abc" {
-		t.Fatal("TestContact failed " + "abc")
-	}
-
-	twoDiffType := Contact("abc", 1)
-	if twoDiffType != "abc1" {
-		t.Fatal("TestContact failed " + "abc, 1")
-	}
+	test.Equal(t, Empty, Contact())
+	test.Equal(t, Empty, Contact(""))
+	test.Equal(t, "abc", Contact("abc"))
+	test.Equal(t, "abc1", Contact("abc", 1))
 }
 
 func TestFrom(t *testing.T) {
-	str := From("abc")
-	if str != "abc" {
-		t.Fatal("From failed " + "abc")
-	}
-
-	integer := From(1)
-	if integer != "1" {
-		t.Fatal("From failed " + "1")
-	}
-
-	f := From(1.123)
-	if f != "1.123" {
-		t.Fatal("From failed " + "1.123")
-	}
-
-	b := From(true)
-	if b != "true" {
-		t.Fatal("From failed " + "true")
-	}
+	test.Equal(t, "abc", From("abc"))
+	test.Equal(t, "1", From(1))
+	test.Equal(t, "1.123", From(1.123))
+	test.Equal(t, "true", From(true))
 }
 
 func TestFormat(t *testing.T) {
-	emptySource := Format("", "name", "value")
-	if emptySource != "" {
-		t.Fatal("TestFormat failed " + "name" + "value")
-	}
-
-	emptyName := Format("abc {name}", "", "value")
-	if emptyName != "abc {name}" {
-		t.Fatal("TestFormat failed " + "value")
-	}
-
-	empatyValue := Format("abc {name}", "name", "")
-	if empatyValue != "abc " {
-		t.Fatal("TestFormat failed " + "name")
-	}
-
-	diffTypeValue := Format("abc {name}", "name", 1)
-	if diffTypeValue != "abc 1" {
-		t.Fatal("TestFormat failed " + "abc, 1 ")
-	}
+	test.Equal(t, "", Format("", "name", "value"))
+	test.Equal(t, "abc {name}", Format("abc {name}", "", "value"))
+	test.Equal(t, "abc ", Format("abc {name}", "name", ""))
+	test.Equal(t, "abc 1", Format("abc {name}", "name", 1))
+	test.Equal(t, "abc 1 {name}", Format("abc %v {name}", "n", 1))
 }
 
 func TestFormats(t *testing.T) {
-
-	nilMapStr := Formats("abc", nil)
-	if nilMapStr != "abc" {
-		t.Fatal("TestFormats failed " + "abc")
-	}
-
-	emptyMap := Formats("abc", make(map[string]any))
-	if emptyMap != "abc" {
-		t.Fatal("TestFormats failed " + "abc")
-	}
+	test.Equal(t, "abc", Formats("abc", nil))
+	test.Equal(t, "abc", Formats("abc", make(map[string]any)))
 
 	diffTypeValue := map[string]any{
 		"a": "Dog",
 		"b": 1,
 	}
-	strFromMap := Formats("{a}{ b }c", diffTypeValue)
-	if strFromMap != "Dog1c" {
-		t.Fatal("TestFormats failed " + "Dog1c")
+	test.Equal(t, "Dog1c", Formats("{a}{ b }c", diffTypeValue))
+}
+
+func TestRepeatRune(t *testing.T) {
+	tests := []struct {
+		want  []rune
+		give  rune
+		times int
+	}{
+		{[]rune("bbb"), 'b', 3},
+		{[]rune("..."), '.', 3},
+		{[]rune("  "), ' ', 2},
+	}
+
+	for _, tt := range tests {
+		test.Equal(t, tt.want, RepeatRune(tt.give, tt.times))
+	}
+}
+func TestPadding(t *testing.T) {
+	tests := []struct {
+		want, give, pad string
+		len             int
+		pos             bool
+	}{
+		{"ab000", "ab", "0", 5, true},
+		{"000ab", "ab", "0", 5, false},
+		{"ab012", "ab012", "0", 4, false},
+		{"ab   ", "ab", "", 5, true},
+		{"   ab", "ab", "", 5, false},
+	}
+
+	for _, tt := range tests {
+		test.Equal(t, tt.want, Padding(tt.give, tt.pad, tt.len, tt.pos))
+		if tt.pos {
+			test.Equal(t, tt.want, PadRight(tt.give, tt.pad, tt.len))
+		} else {
+			test.Equal(t, tt.want, PadLeft(tt.give, tt.pad, tt.len))
+		}
 	}
 }

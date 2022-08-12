@@ -45,14 +45,21 @@ func From(value any) string {
 // Example:
 //     Format("abc {name}", "name", 1) -> "abc 1"
 func Format(source string, name string, value any) string {
+	if IsEmpty(source) {
+		return source
+	}
 	pattern := Contact("{\\s*", name, "\\s*}")
 	r, _ := regexp.Compile(pattern)
 
 	matched := r.FindString(source)
 	if IsNotEmpty(matched) {
-
 		return strings.Replace(source, matched, From(value), -1)
 	}
+
+	if strings.Contains(source, "%") {
+		return fmt.Sprintf(source, value)
+	}
+
 	return source
 }
 
@@ -63,6 +70,73 @@ func Formats(source string, params map[string]any) string {
 		source = Format(source, key, val)
 	}
 	return source
+}
+
+/*************************************************************
+ * String repeat operation
+ *************************************************************/
+
+// RepeatRune repeat a rune char.
+func RepeatRune(char rune, count int) (chars []rune) {
+	for i := 0; i < count; i++ {
+		chars = append(chars, char)
+	}
+	return
+}
+
+// RepeatBytes repeat a byte char.
+func RepeatBytes(char byte, times int) (chars []byte) {
+	for i := 0; i < times; i++ {
+		chars = append(chars, char)
+	}
+	return
+}
+
+/*************************************************************
+ * String padding operation
+ *************************************************************/
+
+// Padding a string.
+func Padding(s, pad string, length int, isRight bool) string {
+	diff := len(s) - length
+	if diff >= 0 { // do not need padding.
+		return s
+	}
+
+	if pad == "" || pad == " " {
+		mark := ""
+		if isRight { // to right
+			mark = "-"
+		}
+
+		// padding left: "%7s", padding right: "%-7s"
+		tpl := fmt.Sprintf("%s%d", mark, length)
+		return fmt.Sprintf(`%`+tpl+`s`, s)
+	}
+
+	if isRight { // to right
+		return s + strings.Repeat(pad, -diff)
+	}
+
+	return strings.Repeat(pad, -diff) + s
+}
+
+// PadLeft a string.
+func PadLeft(s, pad string, length int) string {
+	return Padding(s, pad, length, false)
+}
+
+// PadRight a string.
+func PadRight(s, pad string, length int) string {
+	return Padding(s, pad, length, true)
+}
+
+// WrapTag for given string.
+func WrapTag(s, tag string) string {
+	if s == "" {
+		return s
+	}
+	return fmt.Sprintf("<%s>%s</%s>", tag, s, tag)
 }
 
 /*
